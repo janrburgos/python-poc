@@ -1,0 +1,8 @@
+# Ignore main environment variables file.
+/.env
+
+# Ignore JetBrains IDE files.
+.idea/
+
+# Ignore DS_Store file
+/.DS_Store
