@@ -21,6 +21,3 @@ COPY . /app/
 
 # Expose FastAPI’s default port
 EXPOSE 8000
-
-# Run FastAPI app with Uvicorn
-CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
