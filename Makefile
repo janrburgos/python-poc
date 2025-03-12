@@ -24,4 +24,4 @@ shell:
 
 .PHONY: test
 test:
-	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run pytest --cov=app --cov-report=html
+	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run pytest -vv --cov=app --cov-report=html  $(filter-out $@,$(MAKECMDGOALS))
