@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	docker build --rm -t fastapi-local-app -f Dockerfile .
+	docker build --rm -t fastapi-local-app -f Dockerfile.dev .
 	docker image prune -f
 
 .PHONY: update
@@ -21,3 +21,7 @@ start:
 .PHONY: shell
 shell:
 	docker exec -it fastapi-app bash
+
+.PHONY: test
+test:
+	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run pytest --cov=app --cov-report=html

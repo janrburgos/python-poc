@@ -3,3 +3,8 @@ fastapi = "*"
 uvicorn = "*"
 python-dotenv = "*"
 openai = "*"
+httpx = "*"
+pytest = "*"
+
+[dev-packages]
+pytest-cov = "*"

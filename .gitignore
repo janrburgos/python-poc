@@ -6,3 +6,8 @@
 
 # Ignore DS_Store file
 /.DS_Store
+
+# Ignore test coverage files.
+.coverage
+htmlcov/
+.pytest_cache/
