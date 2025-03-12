@@ -22,7 +22,7 @@ If you need to update or lock dependencies within the Pipenv environment, use:
 ```sh
 make update
 ```
-This will ensure that the `Pipfile.lock` is up to date.
+This will ensure that the `Pipfile.lock` is up to date. Don't forget to rebuild the Docker image after updating `Pipfile.lock` by re-running `make build`.
 
 ### 3. Set Up Environment Variables
 Copy the `.env-local` file to `.env` to load environment variables:
