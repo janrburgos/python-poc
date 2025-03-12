@@ -44,7 +44,7 @@ Once the application is running, you can access the API via:
 - Interactive API documentation (Swagger UI): [http://localhost:8000/docs](http://localhost:8000/docs)
 - Alternative API docs (ReDoc): [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
-### 6. Open a Shell in the Running Container
+## Open a Shell in the Running Container
 To interact with the running container, use:
 ```sh
 make shell
@@ -53,6 +53,31 @@ This opens a Bash shell inside the `fastapi-app` container.
 
 ## Stopping the Application
 Since the container is run with `--rm`, it will be automatically removed when stopped. To stop the application, simply press `Ctrl + C` if running in the foreground.
+
+## Unit Testing
+To run all unit tests, run the following command:
+```sh
+make test
+```
+To run tests from a specific files, refer to this sample command:
+```sh
+make test tests/test_main.py
+```
+To run a specific test function, refer to this sample command:
+```sh
+make test tests/test_main.py::test_get_root
+```
+You can test multiple files and functions by separating them with spaces.
+```sh
+make test tests/test_main.py tests/routers/test_arithmetic.py::test_add
+```
+After running the tests, the coverage report will be generated in `htmlcov/index.html`.
+
+## Auto Formatting and Linting
+To auto-format and auto-lint the code, run the following command:
+```sh
+make format
+```
 
 ## Additional Notes
 - The `make start` command runs the container temporarily. If you want to run it in detached mode, modify the Makefile to include the `-d` flag in the `docker run` command.
