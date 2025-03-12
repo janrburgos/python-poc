@@ -25,3 +25,8 @@ shell:
 .PHONY: test
 test:
 	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run pytest -vv --cov=app --cov-report=html  $(filter-out $@,$(MAKECMDGOALS))
+
+.PHONY: format
+format:
+	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run black .
+	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run ruff check . --fix

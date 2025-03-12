@@ -8,3 +8,5 @@ pytest = "*"
 
 [dev-packages]
 pytest-cov = "*"
+ruff = "*"
+black = "*"
