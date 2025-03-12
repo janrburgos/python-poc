@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
 
+
 @router.get("/")
 def read_root():
     """
@@ -11,6 +12,7 @@ def read_root():
         dict: A dictionary containing a welcome message.
     """
     return {"message": "Welcome to the Arithmetic API"}
+
 
 @router.get("/add/{a}/{b}")
 def add(a: float, b: float):
@@ -26,6 +28,7 @@ def add(a: float, b: float):
     """
     return {"operation": "addition", "result": a + b}
 
+
 @router.get("/subtract/{a}/{b}")
 def subtract(a: float, b: float):
     """
@@ -40,6 +43,7 @@ def subtract(a: float, b: float):
     """
     return {"operation": "subtraction", "result": a - b}
 
+
 @router.get("/multiply/{a}/{b}")
 def multiply(a: float, b: float):
     """
@@ -53,6 +57,7 @@ def multiply(a: float, b: float):
         dict: A dictionary containing the operation type and the result.
     """
     return {"operation": "multiplication", "result": a * b}
+
 
 @router.get("/divide/{a}/{b}")
 def divide(a: float, b: float):

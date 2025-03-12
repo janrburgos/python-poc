@@ -13,11 +13,13 @@ app = FastAPI()
 # Serve static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+
 @app.get("/")
 def read_root():
     return {
         "message": "Hello, FastAPI!",
     }
+
 
 app.include_router(arithmetic.router, prefix="/arithmetic")
 app.include_router(status.router, prefix="/status")

@@ -5,17 +5,21 @@ from openai import OpenAI
 import os
 import json
 
+
 class ClassifyStatusRequest(BaseModel):
     statuses: conlist(str, min_length=1, max_length=100)
+
 
 class ClassifyStatusResponse(BaseModel):
     status_name: str
     status_type: str
     substatus_type: Optional[str] = None
 
+
 class ClassifyStatusAPIResponse(BaseModel):
     classified_statuses: List[ClassifyStatusResponse]
     tokens_used: Dict[str, int]
+
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -31,7 +35,7 @@ STATUS_CATEGORIES_DICT = {
         "Natural Causes",
         "Other Delays",
         "Returned",
-        "Traffic Delays"
+        "Traffic Delays",
     ],
     "Info": [None],
     "Transit": [
@@ -43,8 +47,8 @@ STATUS_CATEGORIES_DICT = {
         "Incorrect Info",
         "Onboard at Departure Terminal",
         "Other Delays",
-        "Pick Up Confirmed"
-    ]
+        "Pick Up Confirmed",
+    ],
 }
 
 SYSTEM_PROMPT = f"""
@@ -64,6 +68,7 @@ and `null` for the `substatus_type`.
 
 router = APIRouter()
 client = OpenAI(api_key=OPENAI_API_KEY)
+
 
 @router.post("/classify", response_model=ClassifyStatusAPIResponse)
 async def classify_statuses(request: ClassifyStatusRequest):
@@ -107,15 +112,19 @@ async def classify_statuses(request: ClassifyStatusRequest):
     classified_statuses, tokens_used = classify_statuses_batch(request.statuses)
     return {"classified_statuses": classified_statuses, "tokens_used": tokens_used}
 
+
 def classify_statuses_batch(statuses: List[str]):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": f"Classify these statuses delimited by triple backticks ```{statuses}```"}
+            {
+                "role": "user",
+                "content": f"Classify these statuses delimited by triple backticks ```{statuses}```",
+            },
         ],
         tools=function_definitions(),
-        temperature=0.5
+        temperature=0.5,
     )
 
     # Extract classified_statuses from function definition
@@ -127,42 +136,49 @@ def classify_statuses_batch(statuses: List[str]):
     tokens_used = {
         "prompt_tokens": response.usage.prompt_tokens,
         "completion_tokens": response.usage.completion_tokens,
-        "total_tokens": response.usage.total_tokens
+        "total_tokens": response.usage.total_tokens,
     }
 
     return classified_statuses, tokens_used
 
+
 def function_definitions():
-    return [{
-        'type': 'function',
-        'function': {
-            'name': 'classify_statuses',
-            'description': 'Get an array of statuses classified by status type and substatus type',
-            'parameters': {
-                'type': 'object',
-                'properties': {
-                    'classified_statuses': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'object',
-                            'properties': {
-                                'status_name': {
-                                    'type': 'string',
-                                    'description': 'Name of status'
+    return [
+        {
+            "type": "function",
+            "function": {
+                "name": "classify_statuses",
+                "description": "Get an array of statuses classified by status type and substatus type",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "classified_statuses": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "status_name": {
+                                        "type": "string",
+                                        "description": "Name of status",
+                                    },
+                                    "status_type": {
+                                        "type": "string",
+                                        "description": "Status type of status",
+                                    },
+                                    "substatus_type": {
+                                        "type": "string",
+                                        "description": "Substatus type of status",
+                                    },
                                 },
-                                'status_type': {
-                                    'type': 'string',
-                                    'description': 'Status type of status'
-                                },
-                                'substatus_type': {
-                                    'type': 'string',
-                                    'description': 'Substatus type of status'
-                                }
+                                "required": [
+                                    "status_name",
+                                    "status_type",
+                                    "substatus_type",
+                                ],
                             },
-                            'required': ['status_name', 'status_type', 'substatus_type']
                         }
-                    }
-                }
-            }
+                    },
+                },
+            },
         }
-    }]
+    ]
