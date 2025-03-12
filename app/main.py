@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 import os
 
-from .routers import status
+from .routers import status, arithmetic
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
@@ -19,4 +19,5 @@ def read_root():
         "message": "Hello, FastAPI!",
     }
 
+app.include_router(arithmetic.router, prefix="/arithmetic")
 app.include_router(status.router, prefix="/status")
