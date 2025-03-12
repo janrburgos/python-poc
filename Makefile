@@ -16,7 +16,7 @@ start:
 	docker run --rm --name fastapi-app -p 8000:8000 \
 		-v $(PWD):/app \
 		fastapi-local-app \
-		pipenv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+		pipenv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 .PHONY: shell
 shell:
