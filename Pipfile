@@ -5,6 +5,7 @@ python-dotenv = "*"
 openai = "*"
 httpx = "*"
 pytest = "*"
+pytest-mock = "*"
 
 [dev-packages]
 pytest-cov = "*"
