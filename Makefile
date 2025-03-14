@@ -6,6 +6,7 @@ build:
 .PHONY: update
 update:
 	docker run --rm -v $(PWD):/app fastapi-local-app pipenv lock
+	make build
 
 .PHONY: dotEnvLocal
 dotEnvLocal:
