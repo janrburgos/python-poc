@@ -11,3 +11,6 @@
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Ignore linter files
+.ruff_cache/
