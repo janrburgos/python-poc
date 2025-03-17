@@ -1,5 +1,6 @@
 from app.services.status_classification.gpt import GPTStatusClassifier
 from app.services.status_classification.claude import ClaudeStatusClassifier
+from app.services.status_classification.gemini import GeminiStatusClassifier
 
 
 class UnsupportedLLMError(Exception):
@@ -20,5 +21,7 @@ class LLMStatusClassifierFactory:
             return GPTStatusClassifier()
         elif llm == "claude":
             return ClaudeStatusClassifier()
+        elif llm == "gemini":
+            return GeminiStatusClassifier()
         else:
             raise UnsupportedLLMError(llm)

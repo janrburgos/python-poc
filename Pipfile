@@ -5,6 +5,7 @@ python-dotenv = "*"
 # AI
 openai = "*"
 anthropic = "*"
+google-genai = "*"
 # http client
 httpx = "*"
 # unit testing
