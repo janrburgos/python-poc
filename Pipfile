@@ -2,12 +2,18 @@
 fastapi = "*"
 uvicorn = "*"
 python-dotenv = "*"
+# AI
 openai = "*"
+anthropic = "*"
+# http client
 httpx = "*"
+# unit testing
 pytest = "*"
 pytest-mock = "*"
 
 [dev-packages]
+# unit testing
 pytest-cov = "*"
+# linting and formatting
 ruff = "*"
 black = "*"
