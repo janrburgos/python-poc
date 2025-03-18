@@ -24,7 +24,7 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
                 },
             ],
             tools=self.get_function_schema(),
-            temperature=0.5,
+            temperature=0.1,
             max_tokens=8_000,
         )
 

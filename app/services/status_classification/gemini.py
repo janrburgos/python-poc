@@ -24,7 +24,7 @@ class GeminiStatusClassifier(LLMStatusClassifier):
                     kwargs["status_categories_dict"]
                 ),
                 max_output_tokens=8_000,
-                temperature=0.5,
+                temperature=0.1,
                 response_mime_type="application/json",
                 response_schema=list[StatusClassificationResponse],
             ),
