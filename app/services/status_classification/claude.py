@@ -16,14 +16,14 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
 
         response = self.client.messages.create(
             model="claude-3-5-haiku-20241022",
-            system=self.generate_system_prompt(kwargs["status_categories_dict"]),
+            system=self._generate_system_prompt(kwargs["status_categories_dict"]),
             messages=[
                 {
                     "role": "user",
-                    "content": f"Classify these statuses delimited by triple backticks ```{statuses}```",
+                    "content": self._generate_primary_user_prompt(statuses),
                 },
             ],
-            tools=self.get_function_schema(),
+            tools=self.__get_function_schema(),
             temperature=0.1,
             max_tokens=8_000,
         )
@@ -46,23 +46,7 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
 
         return classified_statuses, tokens_used
 
-    def generate_system_prompt(self, status_categories_dict):
-        return f"""
-               Classify each status into a status type and substatus type based on the following category dictionary
-               delimited by triple backticks:
-               ```{status_categories_dict}```
-
-               - The keys from the category dictionary are status types, and their values are valid substatus types.
-               - The status type should never be `null`. If a status cannot be classified into any specific status type,
-               return `Transit` as the status type.
-               - If a status type allows `null`, the substatus type may be `null` only if no better match exists
-               or the status is ambiguous.
-               - Only return valid combinations from the given dictionary.
-               - If the status is too ambiguous to classify accurately, return `Transit` as the `status_type`
-               and `null` for the `substatus_type`.
-               """
-
-    def get_function_schema(self):
+    def __get_function_schema(self):
         return [
             {
                 "name": "classify_statuses",
