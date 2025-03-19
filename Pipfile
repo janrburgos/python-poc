@@ -2,6 +2,10 @@
 fastapi = "*"
 uvicorn = "*"
 python-dotenv = "*"
+# database
+sqlalchemy = "*"
+alembic = "*"
+psycopg2 = "*"
 # AI
 openai = "*"
 anthropic = "*"
