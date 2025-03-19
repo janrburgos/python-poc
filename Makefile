@@ -14,9 +14,8 @@ dotEnvLocal:
 
 .PHONY: start
 start:
-	docker run --rm --name fastapi-app -p 8000:8000 \
-		-v $(PWD):/app \
-		fastapi-local-app \
+	docker-compose up --detach db
+	docker-compose run --name fastapi-app --rm --service-ports fastapi-app \
 		pipenv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 .PHONY: shell
