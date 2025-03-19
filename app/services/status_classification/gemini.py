@@ -18,13 +18,13 @@ class GeminiStatusClassifier(LLMStatusClassifier):
 
         response = self.client.models.generate_content(
             model="gemini-2.0-flash-lite",
-            contents=self._generate_primary_user_prompt(statuses),
+            contents=self.__generate_contents(statuses),
             config=types.GenerateContentConfig(
                 system_instruction=self._generate_system_prompt(
                     kwargs["status_categories_dict"]
                 ),
                 max_output_tokens=8_000,
-                temperature=0.1,
+                temperature=0.0,
                 response_mime_type="application/json",
                 response_schema=list[StatusClassificationResponse],
             ),
@@ -38,3 +38,6 @@ class GeminiStatusClassifier(LLMStatusClassifier):
         }
 
         return response.parsed, tokens_used
+
+    def __generate_contents(self, statuses: List[str]) -> List[str]:
+        return [self._generate_primary_user_prompt(status) for status in statuses]

@@ -24,7 +24,7 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
                 },
             ],
             tools=self.__get_function_schema(),
-            temperature=0.1,
+            temperature=0.0,
             max_tokens=8_000,
         )
 
@@ -32,7 +32,6 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
 
         # Extract classified_statuses from function definition
         for content_block in response.content:
-            print(content_block)
             if content_block.type == "tool_use":
                 classified_statuses = content_block.input["classified_statuses"]
                 break
@@ -46,7 +45,7 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
 
         return classified_statuses, tokens_used
 
-    def __get_function_schema(self):
+    def __get_function_schema(self) -> List[Dict]:
         return [
             {
                 "name": "classify_statuses",
@@ -82,3 +81,6 @@ class ClaudeStatusClassifier(LLMStatusClassifier):
                 },
             }
         ]
+
+    def _generate_primary_user_prompt(self, statuses: List[str]) -> str:
+        return f"Classify these statuses delimited by triple backticks ```{statuses}```"

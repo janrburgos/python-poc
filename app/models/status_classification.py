@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 
 
 class StatusClassificationRequest(BaseModel):
-    statuses: conlist(str, min_length=1, max_length=50)
+    statuses: conlist(str, min_length=1, max_length=20)
     llm: Optional[str] = "gpt"
 
     @field_validator("llm", mode="before")

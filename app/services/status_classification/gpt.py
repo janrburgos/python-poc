@@ -17,20 +17,9 @@ class GPTStatusClassifier(LLMStatusClassifier):
 
         response = self.client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": self._generate_system_prompt(
-                        kwargs["status_categories_dict"]
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": self._generate_primary_user_prompt(statuses),
-                },
-            ],
+            messages=self.__generate_messages(statuses, **kwargs),
             tools=self.__get_function_schema(),
-            temperature=0.1,
+            temperature=0.0,
             max_tokens=10_000,
         )
 
@@ -48,7 +37,7 @@ class GPTStatusClassifier(LLMStatusClassifier):
 
         return classified_statuses, tokens_used
 
-    def __get_function_schema(self):
+    def __get_function_schema(self) -> List[Dict]:
         return [
             {
                 "type": "function",
@@ -87,3 +76,25 @@ class GPTStatusClassifier(LLMStatusClassifier):
                 },
             }
         ]
+
+    def __generate_messages(
+        self, statuses: List[str], **kwargs
+    ) -> List[Dict[str, str]]:
+        messages = [
+            {
+                "role": "system",
+                "content": self._generate_system_prompt(
+                    kwargs["status_categories_dict"]
+                ),
+            },
+        ]
+
+        for status in statuses:
+            messages.append(
+                {
+                    "role": "user",
+                    "content": self._generate_primary_user_prompt(status),
+                }
+            )
+
+        return messages
