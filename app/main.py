@@ -1,16 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from dotenv import load_dotenv
 from app.database import Base, engine
-import os
 
 from .routers import status, arithmetic, user
 
 # Initialize database
 Base.metadata.create_all(bind=engine)
-
-# Load environment variables from .env file
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 app = FastAPI()
 

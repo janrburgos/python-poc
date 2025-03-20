@@ -24,7 +24,11 @@ shell:
 
 .PHONY: test
 test:
-	docker run --rm -v $(PWD):/app fastapi-local-app pipenv run pytest -vv --cov=app --cov-report=html  $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose down --volumes
+	docker-compose up --detach db
+	docker-compose run --name fastapi-app --rm fastapi-app \
+		pipenv run pytest -vv --cov=app --cov-report=html  $(filter-out $@,$(MAKECMDGOALS))
+	docker-compose down --volumes
 
 .PHONY: format
 format:
