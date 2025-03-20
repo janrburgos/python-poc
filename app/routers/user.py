@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_
+from typing import Optional
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
@@ -8,19 +9,31 @@ from app.schemas.user import UserCreate, UserResponse, UserUpdate
 router = APIRouter()
 
 
-@router.get("/", response_model=list[UserResponse])
-def read_users(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    """
-    Retrieve a list of users with optional pagination.
+@router.get("/search", response_model=UserResponse)
+def get_user_by_username_or_email(
+    username: Optional[str] = Query(default=None),
+    email: Optional[str] = Query(default=None),
+    db: Session = Depends(get_db),
+):
+    """Search for a user by username or email."""
+    user = None
 
-        Args:
-            offset (int, optional): Number of records to skip. Defaults to 0.
-            limit (int, optional): Maximum number of records to return. Defaults to 10.
+    if not username and not email:
+        raise HTTPException(
+            status_code=400,
+            detail="Provide either 'username' or 'email' as a query parameter",
+        )
 
-        Returns:
-            list[UserResponse]: A list of user records.
-    """
-    return db.query(User).offset(offset).limit(limit).all()
+    if username:
+        user = db.query(User).filter(User.username == username).first()
+
+    if not user and email:
+        user = db.query(User).filter(User.email == email).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
 
 
 @router.get("/{user_id}", response_model=UserResponse)
@@ -43,40 +56,19 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return user
 
 
-@router.get("/search", response_model=UserResponse)
-def get_user_by_username_or_email(
-    username: str = Query(None), email: str = Query(None), db: Session = Depends(get_db)
-):
+@router.get("/", response_model=list[UserResponse])
+def read_users(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     """
-    Search for a user by username or email.
+    Retrieve a list of users with optional pagination.
 
         Args:
-            username (str, optional): The username of the user.
-            email (str, optional): The email of the user.
+            offset (int, optional): Number of records to skip. Defaults to 0.
+            limit (int, optional): Maximum number of records to return. Defaults to 10.
 
         Returns:
-            UserResponse: The user matching the given username or email.
-
-        Raises:
-            HTTPException: If neither `username` nor `email` is provided (400).
-            HTTPException: If no matching user is found (404).
+            list[UserResponse]: A list of user records.
     """
-    if not username and not email:
-        raise HTTPException(
-            status_code=400,
-            detail="Provide either 'username' or 'email' as a query parameter",
-        )
-
-    user = (
-        db.query(User)
-        .filter(or_(User.username == username, User.email == email))
-        .first()
-    )
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return user
+    return db.query(User).offset(offset).limit(limit).all()
 
 
 @router.post("/", response_model=UserResponse)
