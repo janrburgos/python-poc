@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
+from app.database import Base, engine
 import os
 
-from .routers import status, arithmetic
+from .routers import status, arithmetic, user
+
+# Initialize database
+Base.metadata.create_all(bind=engine)
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
@@ -21,5 +25,7 @@ def read_root():
     }
 
 
-app.include_router(arithmetic.router, prefix="/arithmetic")
-app.include_router(status.router, prefix="/status")
+app.include_router(user.router, prefix="/users", tags=["Users"])
+
+app.include_router(status.router, prefix="/status", tags=["Status Classifier"])
+app.include_router(arithmetic.router, prefix="/arithmetic", tags=["Math-Tinik"])
