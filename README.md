@@ -79,6 +79,15 @@ To auto-format and auto-lint the code, run the following command:
 make format
 ```
 
+## Database Migrations
+To manage database schema changes using Alembic:
+1. Make changes to your models.
+2. Use the following command:
+```sh
+make dbMigrate "Your migration message"
+```
+The migration file will be auto-generated in the `alembic/versions` directory based on your changes. The migration will be applied to the local database once you run the application.
+
 ## Additional Notes
 - The `make start` command runs the container temporarily. If you want to run it in detached mode, modify the Makefile to include the `-d` flag in the `docker run` command.
 - Ensure that the `.env` file contains all necessary environment variables before starting the app.
