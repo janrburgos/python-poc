@@ -6,6 +6,10 @@ python-dotenv = "*"
 sqlalchemy = "*"
 alembic = "*"
 psycopg2 = "*"
+# background jobs
+celery = { extras = ["redis"], version = "*" }
+flower = "*"
+redis = "*"
 # AI
 openai = "*"
 anthropic = "*"

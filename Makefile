@@ -14,7 +14,7 @@ dotEnvLocal:
 
 .PHONY: start
 start:
-	docker-compose up --detach db
+	docker-compose up --detach db redis celery-worker celery-beat flower
 	docker-compose run --rm fastapi-app pipenv run alembic upgrade head
 	docker-compose run --name fastapi-app --rm --service-ports fastapi-app \
 		pipenv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -42,4 +42,8 @@ dbMigrate:
 	docker-compose up --detach db
 	docker-compose run --rm fastapi-app pipenv run alembic upgrade head
 	docker-compose run --rm fastapi-app pipenv run alembic revision --autogenerate -m "$(filter-out $@,$(MAKECMDGOALS))"
+	docker-compose down
+
+.PHONY: stop
+stop:
 	docker-compose down

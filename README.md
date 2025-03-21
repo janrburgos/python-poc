@@ -52,7 +52,11 @@ make shell
 This opens a Bash shell inside the `fastapi-app` container.
 
 ## Stopping the Application
-Since the container is run with `--rm`, it will be automatically removed when stopped. To stop the application, simply press `Ctrl + C` if running in the foreground.
+To stop the application, simply press `Ctrl + C` if running in the foreground.
+Other services will still be running in detached mode (e.g. database, redis, etc.). To stop them as well, use:
+```sh
+make stop
+```
 
 ## Unit Testing
 To run all unit tests, run the following command:

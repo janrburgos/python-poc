@@ -19,5 +19,37 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7.4.2-alpine
+    container_name: fastapi-redis
+    volumes:
+      - .:/app
+
+  celery-worker:
+    image: fastapi-local-app
+    container_name: fastapi-celery-worker
+    env_file: .env
+    command: celery -A app.celery.celery worker --loglevel=info --hostname=fastapi-celeryworker
+    volumes:
+      - .:/app
+
+  celery-beat:
+    image: fastapi-local-app
+    container_name: fastapi-celery-beat
+    env_file: .env
+    command: celery -A app.celery.celery beat --loglevel=info
+    volumes:
+      - .:/app
+
+  flower:
+    image: fastapi-local-app
+    container_name: fastapi-flower
+    env_file: .env
+    command: celery -A app.celery.celery flower --port=5555
+    ports:
+      - "5556:5555"
+    volumes:
+      - .:/app
+
 volumes:
   postgres_data:
