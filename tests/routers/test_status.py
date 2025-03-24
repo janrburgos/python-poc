@@ -56,7 +56,10 @@ def test_classify(mock_llm_client):
 
     response = client.post(
         "/status/classify",
-        json={"statuses": ["shipment has been cancelled", "package is in transit"]},
+        json={
+            "statuses": ["shipment has been cancelled", "package is in transit"],
+            "llm": "gpt",
+        },
     )
     assert response.status_code == 200
     assert response.json() == {

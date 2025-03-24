@@ -1,3 +1,4 @@
+from app.services.status_classification.ft_gpt import FTGPTStatusClassifier
 from app.services.status_classification.gpt import GPTStatusClassifier
 from app.services.status_classification.claude import ClaudeStatusClassifier
 from app.services.status_classification.gemini import GeminiStatusClassifier
@@ -17,6 +18,8 @@ class LLMStatusClassifierFactory:
     @staticmethod
     def get_classifier(llm: str):
         llm = llm.lower()
+        if llm == "ft-gpt":
+            return FTGPTStatusClassifier()
         if llm == "gpt":
             return GPTStatusClassifier()
         elif llm == "claude":

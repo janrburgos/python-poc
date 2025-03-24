@@ -4,12 +4,14 @@ from typing import List, Dict, Optional
 
 class StatusClassificationRequest(BaseModel):
     statuses: conlist(str, min_length=1, max_length=20)
-    llm: Optional[str] = "gpt"
+    llm: Optional[str] = "ft-gpt"
 
     @field_validator("llm", mode="before")
     @classmethod
     def set_default_llm(cls, value):
-        return "gpt" if not value or str(value).strip() == "" else value.lower().strip()
+        return (
+            "ft-gpt" if not value or str(value).strip() == "" else value.lower().strip()
+        )
 
 
 class StatusClassificationResponse(BaseModel):
